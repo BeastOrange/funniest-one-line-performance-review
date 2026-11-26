@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 REVIEW = (
@@ -5,7 +6,20 @@ REVIEW = (
 )
 
 
+def validate(text: str) -> None:
+    if not text or not text.strip():
+        raise SystemExit("Review must not be empty or whitespace only.")
+    if "\n" in text or "\r" in text:
+        raise SystemExit("Review must be a single line without newline characters.")
+    if not (1 <= len(text) <= 140):
+        raise SystemExit(
+            f"Review must be between 1 and 140 characters long (got {len(text)})."
+        )
+
+
 def main() -> None:
+    validate(REVIEW)
+
     output_dir = Path("/output")
     output_dir.mkdir(parents=True, exist_ok=True)
     entry_path = output_dir / "entry.txt"
